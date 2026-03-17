@@ -1,0 +1,128 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  background-color: #F5A623;
+  padding: 0 32px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* LOGO */
+.header__logo {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1a1a1a;
+  white-space: nowrap;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+}
+
+/* SEARCH BAR */
+.header__search {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 30px;
+  overflow: hidden;
+  width: 420px;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  transition: border 0.2s ease;
+}
+
+.header__search:focus-within {
+  border: 2px solid #1a1a1a;
+}
+
+.header__search input {
+  border: none;
+  outline: none;
+  padding: 9px 18px;
+  font-size: 14px;
+  width: 100%;
+  background: transparent;
+  color: #555;
+  font-family: sans-serif;
+}
+
+.header__search input::placeholder {
+  color: #aaa;
+}
+
+.header__search button {
+  background-color: #1a1a1a;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 17px;
+  transition: background 0.2s;
+  border-radius: 0 30px 30px 0;
+}
+
+.header__search button:hover {
+  background-color: #333;
+}
+
+/* NAV ACTIONS */
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header__action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: sans-serif;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  padding: 4px 0;
+}
+
+.header__action-btn:hover {
+  opacity: 0.65;
+}
+
+.header__action-btn svg {
+  font-size: 22px;
+}
+
+.header__menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  transition: opacity 0.2s;
+}
+
+.header__menu-btn:hover {
+  opacity: 0.65;
+}
