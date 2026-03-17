@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiFilter, FiStar, FiCalendar, FiMapPin } from 'react-icons/fi';
+import { FiFilter, FiStar, FiCalendar, FiMapPin, FiClock } from 'react-icons/fi';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import './Middle.css';
 
@@ -9,7 +9,7 @@ const servicesData = [
     title: 'DJ ROYAL KING V4',
     vendor: 'Unknown Vendor',
     eventsHosted: 0,
-    location: 'Angul, Ganjam, Khordha, Balasore, Sambalpur',
+    location: 'Angul, Ganjam, Khordha, Balasore',
     state: 'ODISHA',
     rating: 0.0,
     reviews: 0,
@@ -24,7 +24,7 @@ const servicesData = [
     title: 'Royal Wedding Decor',
     vendor: 'Decor Dreams',
     eventsHosted: 12,
-    location: 'bhubaneswar, Puri, Cuttack, Rourkela',
+    location: 'Bhubaneswar, Puri, Cuttack, Rourkela',
     state: 'ODISHA',
     rating: 4.5,
     reviews: 28,
@@ -66,80 +66,102 @@ const servicesData = [
   },
 ];
 
-const formatPrice = (n) =>
-  '₹' + n.toLocaleString('en-IN');
+const CATEGORIES = ['All', 'DJ', 'Decor', 'Catering', 'Photography'];
+
+const formatPrice = (n) => '₹' + n.toLocaleString('en-IN');
+
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80';
 
 const ServiceCard = ({ service }) => {
   const [wished, setWished] = useState(false);
 
   return (
     <div className="card">
-      {/* Image */}
       <div className="card__image-wrap">
-        <img src={service.image} alt={service.title} />
+        <img
+          src={service.image}
+          alt={service.title}
+          onError={(e) => { e.target.src = FALLBACK_IMG; }}
+        />
         <span className="card__badge">{service.category}</span>
         <button
           className={`card__wishlist ${wished ? 'active' : ''}`}
           onClick={() => setWished(!wished)}
+          aria-label="Add to wishlist"
         >
           {wished ? <AiFillHeart /> : <AiOutlineHeart />}
         </button>
       </div>
 
-      {/* Body */}
       <div className="card__body">
         <h3 className="card__title">{service.title}</h3>
 
         <div className="card__meta">
           <span className="card__vendor">{service.vendor}</span>
           <span className="card__event-badge">
-            <FiCalendar size={11} />
-            Event Hosted: {service.eventsHosted}
+            <FiCalendar size={10} />
+            Hosted: {service.eventsHosted}
           </span>
         </div>
 
         <p className="card__location">
-          <FiMapPin size={11} /> {service.location}... {service.state}
+          <FiMapPin size={10} /> {service.location}...
         </p>
 
-        <div className="card__rating">
-          {service.rating.toFixed(1)} <FiStar size={11} />
-          <span style={{ fontWeight: 400, fontSize: '11px', marginLeft: 2 }}>
-            ({service.reviews} reviews)
-          </span>
+        <div className="card__stats">
+          <div className="card__rating">
+            <FiStar size={10} />
+            {service.rating.toFixed(1)}
+            <span className="card__reviews">({service.reviews})</span>
+          </div>
+          <p className="card__price">
+            {formatPrice(service.priceMin)} – {formatPrice(service.priceMax)}
+          </p>
         </div>
 
-        <p className="card__price">
-          {formatPrice(service.priceMin)} – {formatPrice(service.priceMax)}
+        <p className="card__prep">
+          <FiClock size={10} />
+          <span>Prep:</span> {service.prepTime}
         </p>
-
-        {/* <p className="card__prep">
-          <span>Prep Time:</span> {service.prepTime}
-        </p> */}
-
-        {/* <div className="card__actions">
-          <button className="btn-book">BOOK NOW</button>
-          <button className="btn-cart">ADD TO CART</button>
-        </div> */}
       </div>
     </div>
   );
 };
 
 const Middle = () => {
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const filtered = activeCategory === 'All'
+    ? servicesData
+    : servicesData.filter(s => s.category === activeCategory);
+
   return (
     <section className="middle">
-      {/* Top Filter Bar */}
+      <div className="middle__heading">
+        <h2 className="middle__heading-title">Top Services</h2>
+        <p className="middle__heading-sub">Browse from 500+ verified vendors across Odisha</p>
+      </div>
+
       <div className="middle__topbar">
+        <div className="middle__tabs">
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat}
+              className={`middle__tab ${activeCategory === cat ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
         <button className="middle__filter-btn">
-          <FiFilter size={15} />
+          <FiFilter size={14} />
           Filter
         </button>
       </div>
 
-      {/* Cards Grid */}
       <div className="middle__grid">
-        {servicesData.map((service) => (
+        {filtered.map((service) => (
           <ServiceCard key={service.id} service={service} />
         ))}
       </div>
