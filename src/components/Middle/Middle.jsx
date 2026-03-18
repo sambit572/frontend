@@ -68,13 +68,18 @@ const servicesData = [
 
 const CATEGORIES = ['All', 'DJ', 'Decor', 'Catering', 'Photography'];
 
-const formatPrice = (n) => '₹' + n.toLocaleString('en-IN');
+/* e.g. 55000 → ₹55K  |  100000 → ₹1L */
+const formatK = (n) => {
+  if (n >= 100000) return `₹${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 1)}L`;
+  return `₹${Math.round(n / 1000)}K`;
+};
 
 const FALLBACK_IMG =
   'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80';
 
 const ServiceCard = ({ service }) => {
   const [wished, setWished] = useState(false);
+  const isNewVendor = service.rating === 0;
 
   return (
     <div className="card">
@@ -86,11 +91,7 @@ const ServiceCard = ({ service }) => {
           alt={service.title}
           onError={(e) => { e.target.src = FALLBACK_IMG; }}
         />
-
-        {/* category badge — top left */}
         <span className="card__badge">{service.category}</span>
-
-        {/* wishlist — top right */}
         <button
           className={`card__wishlist ${wished ? 'active' : ''}`}
           onClick={() => setWished(!wished)}
@@ -98,26 +99,31 @@ const ServiceCard = ({ service }) => {
         >
           {wished ? <AiFillHeart /> : <AiOutlineHeart />}
         </button>
-
-        {/* price — overlaid on image bottom right */}
-        <span className="card__price-overlay">
-          {formatPrice(service.priceMin)} – {formatPrice(service.priceMax)}
-        </span>
       </div>
 
       {/* ── DETAILS SECTION (20%) ── */}
       <div className="card__body">
 
-        {/* Row 1: title */}
-        <h3 className="card__title">{service.title}</h3>
+        {/* Row 1: title + price range */}
+        <div className="card__top-row">
+          <h3 className="card__title">{service.title}</h3>
+          <span className="card__price-badge">
+            {formatK(service.priceMin)}
+            <span className="card__price-sep">–</span>
+            {formatK(service.priceMax)}
+          </span>
+        </div>
 
-        {/* Row 2: vendor on left · rating + prep on right */}
+        {/* Divider */}
+        <div className="card__divider" />
+
+        {/* Row 2: vendor · rating · prep time */}
         <div className="card__info-row">
           <span className="card__vendor">{service.vendor}</span>
           <div className="card__meta-right">
-            <span className="card__rating">
+            <span className={`card__rating ${isNewVendor ? 'card__rating--new' : ''}`}>
               <FiStar size={9} />
-              {service.rating.toFixed(1)}
+              {isNewVendor ? 'New' : service.rating.toFixed(1)}
             </span>
             <span className="card__prep-pill">
               <FiClock size={9} />
@@ -141,8 +147,6 @@ const Middle = () => {
 
   return (
     <section className="middle">
-
-      {/* Section heading */}
       <div className="middle__heading">
         <h2 className="middle__heading-title">Top Services</h2>
         <p className="middle__heading-sub">
@@ -150,7 +154,6 @@ const Middle = () => {
         </p>
       </div>
 
-      {/* Top bar */}
       <div className="middle__topbar">
         <div className="middle__tabs">
           {CATEGORIES.map((cat) => (
@@ -169,13 +172,11 @@ const Middle = () => {
         </button>
       </div>
 
-      {/* Cards */}
       <div className="middle__grid">
         {filtered.map((service) => (
           <ServiceCard key={service.id} service={service} />
         ))}
       </div>
-
     </section>
   );
 };
