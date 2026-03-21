@@ -8,83 +8,66 @@ const servicesData = [
     id: 1,
     title: 'DJ ROYAL KING V4',
     vendor: 'Unknown Vendor',
-    eventsHosted: 0,
-    location: 'Angul, Ganjam, Khordha, Balasore',
-    state: 'ODISHA',
     rating: 0.0,
-    reviews: 0,
     priceMin: 55000,
     priceMax: 80000,
     prepTime: '10h',
     category: 'DJ',
-    image: 'https://images.unsplash.com/photo-1571266028243-d220c6a7a3c3?w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1571266028243-d220c6a7a3c3?w=600&q=80',
   },
   {
     id: 2,
     title: 'Royal Wedding Decor',
     vendor: 'Decor Dreams',
-    eventsHosted: 12,
-    location: 'Bhubaneswar, Puri, Cuttack, Rourkela',
-    state: 'ODISHA',
     rating: 4.5,
-    reviews: 28,
     priceMin: 30000,
     priceMax: 90000,
     prepTime: '24h',
     category: 'Decor',
-    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80',
   },
   {
     id: 3,
     title: 'CaterKing Premium',
     vendor: 'Food Palace',
-    eventsHosted: 45,
-    location: 'Bhadrak, Baripada, Jeypore, Balangir',
-    state: 'ODISHA',
     rating: 4.8,
-    reviews: 103,
     priceMin: 20000,
     priceMax: 60000,
     prepTime: '6h',
     category: 'Catering',
-    image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80',
   },
   {
     id: 4,
     title: 'SnapStudio Pro',
     vendor: 'Lens & Light Co.',
-    eventsHosted: 87,
-    location: 'Jajpur, Keonjhar, Koraput, Malkangiri',
-    state: 'ODISHA',
     rating: 4.9,
-    reviews: 214,
     priceMin: 15000,
     priceMax: 45000,
     prepTime: '2h',
     category: 'Photography',
-    image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80',
   },
 ];
 
 const CATEGORIES = ['All', 'DJ', 'Decor', 'Catering', 'Photography'];
 
-/* e.g. 55000 → ₹55K  |  100000 → ₹1L */
 const formatK = (n) => {
   if (n >= 100000) return `₹${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 1)}L`;
   return `₹${Math.round(n / 1000)}K`;
 };
 
 const FALLBACK_IMG =
-  'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80';
+  'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80';
 
 const ServiceCard = ({ service }) => {
   const [wished, setWished] = useState(false);
-  const isNewVendor = service.rating === 0;
+  const isNew = service.rating === 0;
 
   return (
     <div className="card">
 
-      {/* ── IMAGE SECTION (80%) ── */}
+      {/* ── IMAGE 80% ── */}
       <div className="card__image-wrap">
         <img
           src={service.image}
@@ -101,32 +84,29 @@ const ServiceCard = ({ service }) => {
         </button>
       </div>
 
-      {/* ── DETAILS SECTION (20%) ── */}
+      {/* ── DETAILS 20% ── */}
       <div className="card__body">
 
-        {/* Row 1: title + price range */}
-        <div className="card__top-row">
+        {/* Left: title + vendor */}
+        <div className="card__body-left">
           <h3 className="card__title">{service.title}</h3>
+          <span className="card__vendor">{service.vendor}</span>
+        </div>
+
+        {/* Right: price badge + rating + prep */}
+        <div className="card__body-right">
           <span className="card__price-badge">
             {formatK(service.priceMin)}
             <span className="card__price-sep">–</span>
             {formatK(service.priceMax)}
           </span>
-        </div>
-
-        {/* Divider */}
-        <div className="card__divider" />
-
-        {/* Row 2: vendor · rating · prep time */}
-        <div className="card__info-row">
-          <span className="card__vendor">{service.vendor}</span>
-          <div className="card__meta-right">
-            <span className={`card__rating ${isNewVendor ? 'card__rating--new' : ''}`}>
-              <FiStar size={9} />
-              {isNewVendor ? 'New' : service.rating.toFixed(1)}
+          <div className="card__meta-pills">
+            <span className={`card__rating ${isNew ? 'card__rating--new' : ''}`}>
+              <FiStar size={8} />
+              {isNew ? 'New' : service.rating.toFixed(1)}
             </span>
             <span className="card__prep-pill">
-              <FiClock size={9} />
+              <FiClock size={8} />
               {service.prepTime}
             </span>
           </div>
@@ -147,6 +127,7 @@ const Middle = () => {
 
   return (
     <section className="middle">
+
       <div className="middle__heading">
         <h2 className="middle__heading-title">Top Services</h2>
         <p className="middle__heading-sub">
@@ -177,8 +158,10 @@ const Middle = () => {
           <ServiceCard key={service.id} service={service} />
         ))}
       </div>
+
     </section>
   );
 };
 
 export default Middle;
+
