@@ -5,6 +5,17 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ─── ACCENT TOKENS (replaces yellow) ─── */
+:root {
+  --accent:        #6366f1;   /* indigo-500  — primary accent    */
+  --accent-light:  #818cf8;   /* indigo-400  — hover / glow      */
+  --accent-dim:    #eef2ff;   /* indigo-50   — soft backgrounds  */
+  --accent-border: #c7d2fe;   /* indigo-200  — borders           */
+  --accent-text:   #3730a3;   /* indigo-800  — text on light bg  */
+  --badge-bg:      rgba(99,102,241,0.15);
+  --badge-border:  rgba(99,102,241,0.35);
+}
+
 /* ─── SECTION ─── */
 .middle {
   background: linear-gradient(145deg, #f0f4ff 0%, #eef2ff 55%, #fdf0ff 100%);
@@ -33,7 +44,7 @@
   font-size: 13px; font-weight: 600; cursor: pointer;
   transition: all 0.22s ease; font-family: 'DM Sans', sans-serif;
 }
-.middle__tab:hover { border-color: #F5A623; color: #F5A623; }
+.middle__tab:hover { border-color: var(--accent); color: var(--accent); }
 .middle__tab.active {
   background: #0f0e2a; border-color: #0f0e2a; color: #fff;
   box-shadow: 0 4px 12px rgba(15,14,42,0.25);
@@ -48,9 +59,9 @@
   letter-spacing: 0.4px; font-family: 'DM Sans', sans-serif;
 }
 .middle__filter-btn:hover {
-  background: #F5A623; color: #1a1a2e;
+  background: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245,166,35,0.4);
+  box-shadow: 0 6px 20px rgba(99,102,241,0.45);
 }
 
 /* ─── GRID — 4 columns ─── */
@@ -60,7 +71,7 @@
   gap: 18px;
 }
 
-/* ─── CARD — landscape rectangle: wider than tall ─── */
+/* ─── CARD ─── */
 .card {
   background: #fff;
   border-radius: 16px;
@@ -73,7 +84,6 @@
               box-shadow 0.32s ease, border-color 0.32s ease;
   display: flex;
   flex-direction: column;
-  /* landscape: wider than tall — aspect ratio ~16:9 feel */
   aspect-ratio: 4 / 3;
 }
 
@@ -84,25 +94,82 @@
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 44px rgba(0,0,0,0.13);
-  border-color: rgba(245,166,35,0.4);
+  box-shadow: 0 20px 44px rgba(99,102,241,0.15);
+  border-color: rgba(99,102,241,0.35);
 }
 
 /* ─── IMAGE — 80% of card height ─── */
 .card__image-wrap {
   position: relative;
   overflow: hidden;
-  flex: 4;                /* 4 parts out of 5 = 80% */
+  flex: 4;
 }
 
-.card__image-wrap img {
-  width: 100%; height: 100%;
+/* Carousel strip */
+.card__img-strip {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card__img-strip img {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: transform 0.55s ease;
 }
-.card:hover .card__image-wrap img { transform: scale(1.06); }
 
-/* bottom gradient for readability */
+/* nav arrows */
+.card__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.88);
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.22s ease, background 0.22s ease;
+  z-index: 3;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+.card:hover .card__nav { opacity: 1; }
+.card__nav--prev { left: 8px; }
+.card__nav--next { right: 8px; }
+.card__nav:hover { background: var(--accent); color: #fff; }
+
+/* dot indicators */
+.card__dots {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 3;
+}
+.card__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.55);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+.card__dot.active {
+  background: #fff;
+  transform: scale(1.3);
+}
+
+/* bottom gradient */
 .card__image-wrap::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -111,14 +178,18 @@
   pointer-events: none;
 }
 
-/* category badge */
+/* category badge — indigo instead of yellow */
 .card__badge {
   position: absolute; top: 10px; left: 10px;
-  background: rgba(245,166,35,0.95);
-  color: #7a3e00; font-size: 10px; font-weight: 800;
+  background: var(--badge-bg);
+  border: 1px solid var(--badge-border);
+  color: #fff;
+  font-size: 10px; font-weight: 800;
   padding: 3px 10px; border-radius: 20px;
   letter-spacing: 0.7px; text-transform: uppercase;
-  backdrop-filter: blur(4px); z-index: 2;
+  backdrop-filter: blur(8px);
+  background: rgba(99,102,241,0.82);
+  z-index: 2;
 }
 
 /* wishlist */
@@ -135,9 +206,9 @@
 .card__wishlist:hover { background: #ff4d6d; color: #fff; transform: scale(1.15); }
 .card__wishlist.active { background: #ff4d6d; color: #fff; }
 
-/* ─── DETAILS BODY — 20% of card height ─── */
+/* ─── DETAILS BODY — 20% ─── */
 .card__body {
-  flex: 1;                /* 1 part out of 5 = 20% */
+  flex: 1;
   padding: 0 12px;
   display: flex;
   align-items: center;
@@ -148,7 +219,6 @@
   min-width: 0;
 }
 
-/* left: title + vendor stacked */
 .card__body-left {
   display: flex;
   flex-direction: column;
@@ -173,7 +243,7 @@
 .card__vendor {
   font-size: 10.5px;
   font-weight: 600;
-  color: #4361ee;
+  color: var(--accent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -181,7 +251,6 @@
 }
 .card__vendor:hover { text-decoration: underline; }
 
-/* right: price + meta pills */
 .card__body-right {
   display: flex;
   flex-direction: column;
@@ -190,13 +259,14 @@
   flex-shrink: 0;
 }
 
+/* price badge — replacing amber/yellow with indigo tint */
 .card__price-badge {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  background: #fff8ed;
-  border: 1px solid #f6d08a;
-  color: #a05e00;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  color: var(--accent-text);
   font-size: 10px;
   font-weight: 700;
   padding: 2px 8px;
@@ -214,7 +284,7 @@
 
 .card__rating {
   display: inline-flex; align-items: center; gap: 2px;
-  background: #22c55e; color: #fff;
+  background: #10b981; color: #fff;
   font-size: 9.5px; font-weight: 800;
   padding: 2px 7px; border-radius: 20px; white-space: nowrap;
 }
@@ -239,4 +309,3 @@
   .middle { padding: 28px 14px 40px; }
   .middle__topbar { flex-direction: column; align-items: flex-start; }
 }
-

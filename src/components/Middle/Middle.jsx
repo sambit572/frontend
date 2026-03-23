@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiFilter, FiStar, FiClock } from 'react-icons/fi';
+import { FiFilter, FiStar, FiClock, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import './Middle.css';
 
@@ -13,7 +13,13 @@ const servicesData = [
     priceMax: 80000,
     prepTime: '10h',
     category: 'DJ',
-    image: 'https://images.unsplash.com/photo-1571266028243-d220c6a7a3c3?w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1571266028243-d220c6a7a3c3?w=600&q=80',
+      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80',
+      'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80',
+      'https://images.unsplash.com/photo-1598387993441-a364f854cfba?w=600&q=80',
+      'https://images.unsplash.com/photo-1504704911898-68304a7d2807?w=600&q=80',
+    ],
   },
   {
     id: 2,
@@ -24,7 +30,13 @@ const servicesData = [
     priceMax: 90000,
     prepTime: '24h',
     category: 'Decor',
-    image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80',
+      'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&q=80',
+      'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&q=80',
+      'https://images.unsplash.com/photo-1478146059778-26b09b47c4c1?w=600&q=80',
+      'https://images.unsplash.com/photo-1507504031003-b417219a0fde?w=600&q=80',
+    ],
   },
   {
     id: 3,
@@ -35,7 +47,13 @@ const servicesData = [
     priceMax: 60000,
     prepTime: '6h',
     category: 'Catering',
-    image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80',
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80',
+      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80',
+      'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80',
+      'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80',
+    ],
   },
   {
     id: 4,
@@ -46,7 +64,13 @@ const servicesData = [
     priceMax: 45000,
     prepTime: '2h',
     category: 'Photography',
-    image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80',
+      'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&q=80',
+      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80',
+      'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80',
+      'https://images.unsplash.com/photo-1471341971476-ae15ff5dd4ea?w=600&q=80',
+    ],
   },
 ];
 
@@ -62,18 +86,62 @@ const FALLBACK_IMG =
 
 const ServiceCard = ({ service }) => {
   const [wished, setWished] = useState(false);
+  const [currentImg, setCurrentImg] = useState(0);
   const isNew = service.rating === 0;
+  const images = service.images || [service.image];
+
+  const prev = (e) => {
+    e.stopPropagation();
+    setCurrentImg((i) => (i - 1 + images.length) % images.length);
+  };
+  const next = (e) => {
+    e.stopPropagation();
+    setCurrentImg((i) => (i + 1) % images.length);
+  };
 
   return (
     <div className="card">
 
       {/* ── IMAGE 80% ── */}
       <div className="card__image-wrap">
-        <img
-          src={service.image}
-          alt={service.title}
-          onError={(e) => { e.target.src = FALLBACK_IMG; }}
-        />
+        {/* Scrollable image strip */}
+        <div className="card__img-strip" style={{ transform: `translateX(-${currentImg * 100}%)` }}>
+          {images.map((src, idx) => (
+            <img
+              key={idx}
+              src={src}
+              alt={`${service.title} ${idx + 1}`}
+              onError={(e) => { e.target.src = FALLBACK_IMG; }}
+            />
+          ))}
+        </div>
+
+        {/* Prev / Next arrows */}
+        {images.length > 1 && (
+          <>
+            <button className="card__nav card__nav--prev" onClick={prev} aria-label="Previous image">
+              <FiChevronLeft size={14} />
+            </button>
+            <button className="card__nav card__nav--next" onClick={next} aria-label="Next image">
+              <FiChevronRight size={14} />
+            </button>
+          </>
+        )}
+
+        {/* Dot indicators */}
+        {images.length > 1 && (
+          <div className="card__dots">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                className={`card__dot ${idx === currentImg ? 'active' : ''}`}
+                onClick={(e) => { e.stopPropagation(); setCurrentImg(idx); }}
+                aria-label={`Go to image ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
         <span className="card__badge">{service.category}</span>
         <button
           className={`card__wishlist ${wished ? 'active' : ''}`}
@@ -164,4 +232,3 @@ const Middle = () => {
 };
 
 export default Middle;
-
