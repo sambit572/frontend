@@ -71,6 +71,10 @@
   gap: 18px;
 }
 
+/* ============================================ */
+/* UPDATED: ANGULAR CARD ROTATION */
+/* ============================================ */
+
 /* ─── CARD ─── */
 .card {
   background: #fff;
@@ -85,18 +89,42 @@
   display: flex;
   flex-direction: column;
   aspect-ratio: 4 / 3;
+  /* Apply slight rotation to each card */
+  transform: rotate(0deg);
+}
+
+/* Apply angular rotation to each card */
+.middle__grid .card:nth-child(odd) {
+  transform: rotate(0.6deg);
+}
+
+.middle__grid .card:nth-child(even) {
+  transform: rotate(-0.6deg);
+}
+
+.middle__grid .card:nth-child(3n) {
+  transform: rotate(0.9deg);
+}
+
+.middle__grid .card:nth-child(5n) {
+  transform: rotate(-0.4deg);
+}
+
+.middle__grid .card:nth-child(7n) {
+  transform: rotate(0.3deg);
+}
+
+/* On hover, cards straighten up */
+.card:hover {
+  transform: translateY(-6px) rotate(0deg) !important;
+  box-shadow: 0 20px 44px rgba(99,102,241,0.15);
+  border-color: rgba(99,102,241,0.35);
 }
 
 .card:nth-child(1) { animation-delay: 0.08s; }
 .card:nth-child(2) { animation-delay: 0.16s; }
 .card:nth-child(3) { animation-delay: 0.24s; }
 .card:nth-child(4) { animation-delay: 0.32s; }
-
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 44px rgba(99,102,241,0.15);
-  border-color: rgba(99,102,241,0.35);
-}
 
 /* ─── IMAGE — 80% of card height ─── */
 .card__image-wrap {
@@ -279,33 +307,71 @@
 .card__meta-pills {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
+
+/* ============================================ */
+/* UPDATED: RATING BUTTON - NEW SIZE & COLOR */
+/* ============================================ */
+
+/* ============================================ */
+/* MODERN RATING BUTTON - CHIP STYLE WITH BORDER */
+/* ============================================ */
 
 .card__rating {
-  display: inline-flex; align-items: center; gap: 2px;
-  background: #10b981; color: #fff;
-  font-size: 9.5px; font-weight: 800;
-  padding: 2px 7px; border-radius: 20px; white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(30, 41, 59, 0.9);
+  backdrop-filter: blur(4px);
+  color: #facc15;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 30px;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
-.card__rating--new { background: #94a3b8; }
 
-.card__prep-pill {
-  display: inline-flex; align-items: center; gap: 2px;
-  background: #f1f5f9; color: #475569;
-  font-size: 9.5px; font-weight: 600;
-  padding: 2px 7px; border-radius: 20px; white-space: nowrap;
+.card__rating svg {
+  width: 12px;
+  height: 12px;
+  fill: #facc15;
+  stroke: #facc15;
 }
 
+.card__rating--new {
+  background: rgba(15, 23, 42, 0.9);
+  color: #94a3b8;
+}
+
+.card__rating--new svg {
+  fill: #94a3b8;
+  stroke: #94a3b8;
+}
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1200px) {
   .middle__grid { grid-template-columns: repeat(3, 1fr); }
+  /* Reduce rotation on tablet */
+  .middle__grid .card:nth-child(odd) { transform: rotate(0.4deg); }
+  .middle__grid .card:nth-child(even) { transform: rotate(-0.4deg); }
+  .middle__grid .card:nth-child(3n) { transform: rotate(0.6deg); }
+  .middle__grid .card:nth-child(5n) { transform: rotate(-0.3deg); }
 }
 @media (max-width: 900px) {
   .middle__grid { grid-template-columns: repeat(2, 1fr); }
+  /* Further reduce rotation on mobile */
+  .middle__grid .card:nth-child(odd) { transform: rotate(0.2deg); }
+  .middle__grid .card:nth-child(even) { transform: rotate(-0.2deg); }
+  .middle__grid .card:nth-child(3n) { transform: rotate(0.3deg); }
+  .middle__grid .card:nth-child(5n) { transform: rotate(-0.2deg); }
 }
 @media (max-width: 560px) {
   .middle__grid { grid-template-columns: 1fr; }
   .middle { padding: 28px 14px 40px; }
   .middle__topbar { flex-direction: column; align-items: flex-start; }
+  /* Reset rotation on mobile for better readability */
+  .middle__grid .card {
+    transform: rotate(0deg) !important;
+  }
 }
